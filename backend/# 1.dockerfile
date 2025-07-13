@@ -1,6 +1,5 @@
 # 1. Usar una imagen base de PHP-FPM con Alpine (ligera y eficiente)
-FROM php:8.3-fpm-alpine
-
+FROM php:8.2-fpm-alpine
 # 2. Instalar dependencias del sistema y extensiones de PHP
 RUN apk update && apk add --no-cache \
     nginx \
