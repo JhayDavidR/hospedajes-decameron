@@ -20,7 +20,7 @@ export interface Hotel {
   providedIn: 'root'
 })
 export class HotelService {
-  private apiUrl = 'http://localhost:8000/api/hoteles';
+  private apiUrl = 'https://hospedajes-decameron.onrender.com/api/hoteles';
 
   constructor(private http: HttpClient) { }
 
