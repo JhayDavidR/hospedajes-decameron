@@ -1,0 +1,190 @@
+<header class="bg-black  shadow mb-6">
+  <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <img src="/assets/logo-decameron.png" alt="Logo Decameron" class="h-13 w-auto" />
+    </div>
+  </div>
+</header>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-semibold mb-6 text-center">Registro de Hotel</h2>
+
+  <form (ngSubmit)="registrarHotel()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1 font-medium">Nombre del Hotel</label>
+        <input type="text" [(ngModel)]="nuevoHotel.nombre" name="nombre" placeholder="Ingrese el nombre del hotel"
+          required class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">Dirección</label>
+        <input type="text" [(ngModel)]="nuevoHotel.direccion" placeholder="Ingrese la dirección del hotel"
+          name="direccion" required class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">Ciudad</label>
+        <input type="text" [(ngModel)]="nuevoHotel.ciudad" name="ciudad" placeholder="Ingrese la ciudad del hotel"
+          required class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">NIT</label>
+        <input type="text" [(ngModel)]="nuevoHotel.nit" name="nit" required placeholder="Ingrese el NIT del hotel"
+          class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block mb-1 font-medium">Número máximo de habitaciones</label>
+        <input type="number" [(ngModel)]="nuevoHotel.numero_habitaciones" name="numero_habitaciones"
+          placeholder="Ingrese el número máximo de habitaciones" min="1" required class="w-full border rounded p-2" />
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-medium mt-6 mb-2">Tipos de habitación</h3>
+      <div *ngFor="let hab of nuevoHotel.habitaciones; let i = index"
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div>
+          <label class="block mb-1">Tipo</label>
+          <select [(ngModel)]="hab.tipo" [ngModelOptions]="{standalone: true}" class="w-full border p-2 rounded">
+            <option value="">Seleccionar</option>
+            <option value="Estandar">Estándar</option>
+            <option value="Junior">Junior</option>
+            <option value="Suite">Suite</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1">Acomodación</label>
+          <select [(ngModel)]="hab.acomodacion" [ngModelOptions]="{standalone: true}" class="w-full border p-2 rounded">
+            <option value="">Seleccionar</option>
+            <option *ngFor="let opcion of acomodacionesPorTipo[hab.tipo] || []" [value]="opcion">
+              {{ opcion }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1">Cantidad</label>
+          <input type="number" [(ngModel)]="hab.cantidad" [ngModelOptions]="{standalone: true}" min="1"
+            class="w-full border p-2 rounded" />
+        </div>
+        <button (click)="eliminarHabitacion(i)"
+          class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar</button>
+      </div>
+
+      <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded mb-3" (click)="agregarHabitacion()">
+        + Agregar Habitación
+      </button>
+    </div>
+
+    <div class="text-center mt-6">
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Guardar Hotel
+      </button>
+    </div>
+  </form>
+  <hr>
+  <div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-center">Hoteles registrados</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let hotel of hoteles" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <img [src]="getImagenHotel(hotel)" alt="Imagen hotel" class="w-full h-40 object-cover rounded-t" />
+
+        <div class="p-4">
+          <h3 class="text-lg font-bold mb-2">{{ hotel.nombre }}</h3>
+          <p class="text-gray-600">{{ hotel.ciudad }}</p>
+          <div class="mt-4 flex justify-end gap-2">
+            <button (click)="verDetalle(hotel)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+              Ver detalle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div *ngIf="mostrarModal && hotelSeleccionado"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-xl shadow-lg relative">
+      <h2 class="text-xl font-semibold mb-4">
+        {{ modoEdicion ? 'Editar Hotel' : 'Detalle del Hotel' }}
+      </h2>
+
+      <form *ngIf="modoEdicion">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block font-medium">Nombre</label>
+            <input [(ngModel)]="hotelSeleccionado.nombre" name="nombre" class="form-input border p-2 w-full" />
+          </div>
+          <div>
+            <label class="block font-medium">Ciudad</label>
+            <input [(ngModel)]="hotelSeleccionado.ciudad" name="ciudad" class="form-input border p-2 w-full" />
+          </div>
+          <div class="col-span-2">
+            <label class="block font-medium">Dirección</label>
+            <input [(ngModel)]="hotelSeleccionado.direccion" name="direccion" class="form-input border p-2 w-full" />
+          </div>
+          <div>
+            <label class="block font-medium">NIT</label>
+            <input [(ngModel)]="hotelSeleccionado.nit" name="nit" class="form-input border p-2 w-full" />
+          </div>
+          <div>
+            <label class="block font-medium"># Habitaciones</label>
+            <input [(ngModel)]="hotelSeleccionado.numero_habitaciones" name="numero_habitaciones" type="number"
+              class="form-input border p-2 w-full" />
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="!modoEdicion" class="space-y-1 text-sm">
+        <div *ngIf="hotelSeleccionado" class="relative w-full overflow-hidden rounded-md">
+          <div class="flex transition-transform duration-300"
+            [style.transform]="'translateX(-' + indiceCarrusel * 100 + '%)'">
+            <img *ngFor="let img of getImagenesCarruselDetalle(hotelSeleccionado!)" [src]="img" alt="Imagen detalle"
+              class="w-full h-60 object-cover flex-shrink-0" />
+          </div>
+
+
+          <!-- Botón izquierda -->
+          <button (click)="cambiarImagenCarrusel(-1)"
+            class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-70 p-2 rounded-full shadow hover:bg-opacity-100">
+            ‹
+          </button>
+
+          <!-- Botón derecha -->
+          <button (click)="cambiarImagenCarrusel(1)"
+            class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-70 p-2 rounded-full shadow hover:bg-opacity-100">
+            ›
+          </button>
+        </div>
+
+        <p><strong>Nombre:</strong> {{ hotelSeleccionado.nombre }}</p>
+        <p><strong>Ciudad:</strong> {{ hotelSeleccionado.ciudad }}</p>
+        <p><strong>Dirección:</strong> {{ hotelSeleccionado.direccion }}</p>
+        <p><strong>NIT:</strong> {{ hotelSeleccionado.nit }}</p>
+        <p><strong>Habitaciones:</strong> {{ hotelSeleccionado.numero_habitaciones }}</p>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button *ngIf="modoEdicion" (click)="guardarEdicion()"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          Guardar
+        </button>
+        <button *ngIf="!modoEdicion" (click)="editarHotel(hotelSeleccionado)"
+          class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+          Editar
+        </button>
+        <button (click)="confirmarEliminacion(hotelSeleccionado.id!)"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+          Eliminar
+        </button>
+        <button (click)="cerrarModal()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+</div>
