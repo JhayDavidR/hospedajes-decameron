@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HabitacionService {
-  private apiUrl = 'http://localhost:8000/api/habitaciones';
+  private apiUrl = 'https://hospedajes-decameron.onrender.com/api/habitaciones';
 
   constructor(private http: HttpClient) {}
 
