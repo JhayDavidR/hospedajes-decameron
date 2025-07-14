@@ -14,10 +14,10 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist",
-            "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "index": "src/index.html",
+            "browser": "src/main.ts", 
+            "polyfills": [       
+              "zone.js"
             ],
             "styles": [
               "src/styles.css"
