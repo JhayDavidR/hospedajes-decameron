@@ -1,11 +1,13 @@
+// frontend/src/app/app.config.ts
 import { ApplicationConfig } from '@angular/core';
-// Importa provideRouter y withHashLocation
 import { provideRouter, withHashLocation } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http'; // Importa esto
 
-import { routes } from './app.routes'; 
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withHashLocation()) 
+    provideRouter(routes, withHashLocation()),
+    provideHttpClient() // Asegúrate de que esto esté aquí
   ]
 };
