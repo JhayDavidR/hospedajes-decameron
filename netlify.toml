@@ -1,7 +1,8 @@
 [build]
-  publish = "frontend/dist"
-  command = "npm install && npm run build"
-  base = "frontend"
+  base = "frontend" # Netlify cambiará el directorio de trabajo a 'frontend/'
+  command = "npm install && npm run build" # Este comando se ejecuta dentro de 'frontend/'
+  publish = "dist" # La salida de 'npm run build' (tu 'outputPath' en angular.json) está dentro de 'frontend/dist'
+                   # Por lo tanto, 'dist' es la ruta relativa correcta desde 'frontend/'
 
 [[redirects]]
   from = "/*"
