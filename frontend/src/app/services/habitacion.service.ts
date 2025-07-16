@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HabitacionService {
-  private apiUrl = 'https://hospedajes-decameron.onrender.com/api/habitaciones';
+  private apiUrl = ' https://hospedajes-decameron-backend-c25debc06c4c.herokuapp.com/api/habitaciones';
 
   constructor(private http: HttpClient) {}
 
